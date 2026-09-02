@@ -13,6 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Project1438Theme {
+                //will change to homepage after creating the view
                 LoginScreen()
             }
         }
