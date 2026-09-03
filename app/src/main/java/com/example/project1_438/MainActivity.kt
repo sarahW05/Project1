@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Project1438Theme {
                 //will change to homepage after creating the view
-                LoginScreen()
+                DashboardScreen()
             }
         }
     }
