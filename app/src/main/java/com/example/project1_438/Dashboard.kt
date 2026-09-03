@@ -36,7 +36,7 @@ fun DashboardScreen() {
                 Text("\uD83D\uDC64")
             }
 
-            //log in button
+            //login button
             Button(
                 onClick = {
                     //logic
