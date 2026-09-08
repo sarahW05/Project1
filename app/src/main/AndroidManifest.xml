@@ -5,6 +5,7 @@
 <!--Had to add android:name=".ProjectApplication" to here so that it would instantiate on app launch,
     It tells Android to start ProjectApplication when the app launches. ProjectApplication holds the app's database.
     Without this, the custom Application class would not be used, and its shared database would not be available to the app. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".ProjectApplication"
         android:allowBackup="true"

@@ -16,9 +16,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import java.net.URL
 
 @Composable
 fun DashboardScreen() {
+
+    val word = "hello"
+    var definition by remember { mutableStateOf("Loading...") }
+
+    LaunchedEffect(Unit) {
+        definition = withContext(Dispatchers.IO) {
+            try {
+                val response = URL(
+                    "https://api.dictionaryapi.dev/api/v2/entries/en/$word"
+                ).readText()
+
+                JSONArray(response)
+                    .getJSONObject(0)
+                    .getJSONArray("meanings")
+                    .getJSONObject(0)
+                    .getJSONArray("definitions")
+                    .getJSONObject(0)
+                    .getString("definition")
+            } catch (e: Exception) {
+                "Definition unavailable"
+            }
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize().padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -50,9 +79,8 @@ fun DashboardScreen() {
         )
 
         //word from api??
-        Text(
-            text = "Random Word"
-        )
+        Text(text = word)
+        Text(text = definition)
 
         Spacer(
             modifier = Modifier.height(200.dp)
