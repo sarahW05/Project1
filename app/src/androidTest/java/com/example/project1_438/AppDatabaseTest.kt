@@ -13,6 +13,7 @@ import com.example.project1_438.database.UserDao
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -80,6 +81,37 @@ class AppDatabaseTest {
             favoriteDao.getUserFavoritesById(userId = 1L)
 
         assertEquals(listOf(favorite), retrievedFavorites)
+    }
+
+    /*
+ * Verifies that a user can be found by their username.
+ */
+    @Test
+    fun getUserByUserName_returnsMatchingUser() = runTest {
+        val expectedUser = User(
+            userName = "testUser",
+            firstName = "Test",
+            lastName = "User",
+            password = "password"
+        )
+
+        userDao.insertUser(expectedUser)
+
+        val actualUser =
+            userDao.getUserByUserName("testUser")
+
+        assertEquals(expectedUser, actualUser)
+    }
+
+    /*
+     * Verifies that searching for a username that does not exist returns null.
+     */
+    @Test
+    fun getUserByUserName_returnsNullWhenUserDoesNotExist() = runTest {
+        val actualUser =
+            userDao.getUserByUserName("missingUser")
+
+        assertNull(actualUser)
     }
 
     /*

@@ -19,7 +19,11 @@ interface UserDao {
 
 //    Grab a single user by their ID
     @Query("SELECT * FROM User WHERE userId = :userId")
-    suspend fun getUserById(userId: Long): User?
+    suspend fun getUserById(userId: Long): User? // <Val>? lets our function return either a value or null
+
+//    Gets a user by their username
+    @Query("SELECT * FROM User WHERE userName = :userName LIMIT 1")
+    suspend fun getUserByUserName(userName: String): User?
 
 //    Our Insertion Functions
 //    This adds multiple users in one go
