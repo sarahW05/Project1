@@ -14,6 +14,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        //get db before setting content
+        val database = (application as ProjectApplication).database
         setContent {
             Project1438Theme {
                 //the thing that controls the ability to move between the screens/views
@@ -29,7 +31,8 @@ class MainActivity : ComponentActivity() {
                         })
                     }
                     composable("login"){
-                        LoginScreen()
+                        //navigates to dashboard once user is successfully logged in
+                        LoginScreen(userDao = database.userDAO(), onLoginSuccess = {navController.navigate("dashboard")})
                     }
                 }
 
