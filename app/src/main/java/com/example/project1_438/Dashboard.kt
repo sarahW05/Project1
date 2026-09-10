@@ -23,7 +23,7 @@ import org.json.JSONArray
 import java.net.URL
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen( onLoginClick: () -> Unit) {
 
     val word = "hello"
     var definition by remember { mutableStateOf("Loading...") }
@@ -67,9 +67,8 @@ fun DashboardScreen() {
 
             //login button
             Button(
-                onClick = {
-                    //logic
-                }) {
+                onClick = onLoginClick
+            ) {
                 Text("Log In")
             }
         }
