@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 import com.example.project1_438.ui.theme.Project1438Theme
 
@@ -13,8 +16,23 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Project1438Theme {
-                //will change to homepage after creating the view
-                DashboardScreen()
+                //the thing that controls the ability to move between the screens/views
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "dashboard"
+                ){
+                    composable("dashboard"){
+                        DashboardScreen(onLoginClick = {
+                            navController.navigate("login")
+                        })
+                    }
+                    composable("login"){
+                        LoginScreen()
+                    }
+                }
+
             }
         }
     }
