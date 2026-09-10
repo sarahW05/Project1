@@ -48,7 +48,7 @@ internal fun fetchDefinition(
 }
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen( onLoginClick: () -> Unit) {
 
     val word = DASHBOARD_WORD
     var definition by remember { mutableStateOf("Loading...") }
@@ -78,9 +78,8 @@ fun DashboardScreen() {
 
             //login button
             Button(
-                onClick = {
-                    //logic
-                }) {
+                onClick = onLoginClick
+            ) {
                 Text("Log In")
             }
         }

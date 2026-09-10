@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,12 +22,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.project1_438.database.UserDao
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(userDao: UserDao, onLoginSuccess: () -> Unit) {
     //variables created to store user information. They start as empty but get updated as user types
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    //error message for if username/password isn't in db
+    var errorMessage by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.fillMaxSize().padding(25.dp),
@@ -75,10 +82,25 @@ fun LoginScreen() {
             modifier = Modifier.height(25.dp)
         )
 
-        Button(onClick = {//login functionality
+        Button(onClick = {
+            scope.launch {
+                val user = userDao.login(username, password)
+                if(user != null){
+                    errorMessage = ""
+                    onLoginSuccess()
+                }
+                else{
+                    errorMessage = "Incorrect username or password"
+                }
+            }
         },
             modifier = Modifier.fillMaxWidth()) {
             Text("Log In")
+        }
+        //if there is an error message display it
+        if(errorMessage.isNotEmpty()){
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(errorMessage)
         }
     }
 }
