@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--The boilerplate/starting code as supplied by the creators at: https://docs.pmd-code.org/pmd-doc-7.24.0/pmd_userdocs_making_rulesets.html-->
+
+<ruleset name="Custom Rules"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        My custom rules
+    </description>
+
+    <!-- Your rules will come here -->
+    <!--PMD supplies samples of rule at: https://pmd.github.io/pmd/pmd_rules_java_design.html-->
+<!--Cyclomatic Complexity check, from their rule samples-->
+    <rule ref="category/java/design.xml/CyclomaticComplexity"
+        message="Overly complex functions should be avoided if possible, try breaking up decision trees to reduce depth">
+        <properties>
+            <property name="classReportLevel" value="80" />
+            <property name="methodReportLevel" value="10" />
+        </properties>
+    </rule>
+
+<!--Heavily Nested Statements rule, also just modified from their supplied snippets-->
+    <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts"
+        message="Too many layers of nesting should be avoided and broken up if able">
+        <properties>
+            <property name="problemDepth" value="3" />
+        </properties>
+    </rule>
+
+<!--Large parameter Lists Rule-->
+    <rule ref="category/java/design.xml/ExcessiveParameterList"
+        message="Large numbers of parameters should be avoided, try breaking them down into objects or classes">
+        <properties>
+            <property name="minimum" value="7" />
+        </properties>
+    </rule>
+
+<!--The only 3 rules that exist in Kotlin, and I spent 5 hours trouble-shooting because the robot is a dumb-dumb, and so am I-->
+    <rule ref="category/kotlin/bestpractices.xml/FunctionNameTooShort" />
+    <rule ref="category/kotlin/bestpractices.xml/LocalVariableShadowsParameter" />
+    <rule ref="category/kotlin/errorprone.xml/OverrideBothEqualsAndHashcode" />
+
+</ruleset>
