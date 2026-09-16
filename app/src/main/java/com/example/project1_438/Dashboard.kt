@@ -22,29 +22,40 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.net.URL
 
-@Composable
-fun DashboardScreen() {
+internal const val DASHBOARD_WORD = "hello"
+internal const val DEFINITION_UNAVAILABLE = "Definition unavailable"
 
-    val word = "hello"
+private const val DICTIONARY_API_BASE_URL =
+    "https://api.dictionaryapi.dev/api/v2/entries/en"
+
+internal fun fetchDefinition(
+    word: String,
+    responseLoader: (String) -> String = { url -> URL(url).readText() }
+): String {
+    return try {
+        val response = responseLoader("$DICTIONARY_API_BASE_URL/$word")
+
+        JSONArray(response)
+            .getJSONObject(0)
+            .getJSONArray("meanings")
+            .getJSONObject(0)
+            .getJSONArray("definitions")
+            .getJSONObject(0)
+            .getString("definition")
+    } catch (e: Exception) {
+        DEFINITION_UNAVAILABLE
+    }
+}
+
+@Composable
+fun DashboardScreen( onLoginClick: () -> Unit) {
+
+    val word = DASHBOARD_WORD
     var definition by remember { mutableStateOf("Loading...") }
 
     LaunchedEffect(Unit) {
         definition = withContext(Dispatchers.IO) {
-            try {
-                val response = URL(
-                    "https://api.dictionaryapi.dev/api/v2/entries/en/$word"
-                ).readText()
-
-                JSONArray(response)
-                    .getJSONObject(0)
-                    .getJSONArray("meanings")
-                    .getJSONObject(0)
-                    .getJSONArray("definitions")
-                    .getJSONObject(0)
-                    .getString("definition")
-            } catch (e: Exception) {
-                "Definition unavailable"
-            }
+            fetchDefinition(word)
         }
     }
 
@@ -67,9 +78,8 @@ fun DashboardScreen() {
 
             //login button
             Button(
-                onClick = {
-                    //logic
-                }) {
+                onClick = onLoginClick
+            ) {
                 Text("Log In")
             }
         }

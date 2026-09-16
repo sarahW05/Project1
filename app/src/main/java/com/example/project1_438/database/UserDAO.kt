@@ -25,6 +25,11 @@ interface UserDao {
     @Query("SELECT * FROM User WHERE userName = :userName LIMIT 1")
     suspend fun getUserByUserName(userName: String): User?
 
+    //gets user if username and password is in db
+    @Query(
+        "SELECT * FROM User WHERE userName = :userName AND password = :password LIMIT 1"
+    )
+    suspend fun login(userName: String, password: String): User?
 //    Our Insertion Functions
 //    This adds multiple users in one go
     @Insert
