@@ -19,8 +19,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
-
+dependencies {
+    implementation 'com.github.jeziellago:compose-markdown:VERSION'
+}
 rootProject.name = "Project1-438"
 include(":app")

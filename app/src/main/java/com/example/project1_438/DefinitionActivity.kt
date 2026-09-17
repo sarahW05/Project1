@@ -1,20 +1,35 @@
 package com.example.project1_438
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.project1_438.ui.theme.Project1438Theme
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
-class DefinitionActivity : AppCompatActivity() {
+class DefinitionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_definition)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setContent {
+            Project1438Theme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Text("""
+                        # Word
+                        **Noun**
+                        Example Definition
+                        **Verb**
+                        Example Definition
+                    """.trimIndent())
+                }
+            }
         }
     }
 }
