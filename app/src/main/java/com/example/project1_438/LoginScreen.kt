@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.project1_438.database.UserDao
 
 @Composable
-fun LoginScreen(userDao: UserDao, onLoginSuccess: () -> Unit) {
+fun LoginScreen(userDao: UserDao, onLoginSuccess: (Long) -> Unit) {
     //variables created to store user information. They start as empty but get updated as user types
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -87,7 +87,7 @@ fun LoginScreen(userDao: UserDao, onLoginSuccess: () -> Unit) {
                 val user = userDao.login(username, password)
                 if(user != null){
                     errorMessage = ""
-                    onLoginSuccess()
+                    onLoginSuccess(user.userId)
                 }
                 else{
                     errorMessage = "Incorrect username or password"

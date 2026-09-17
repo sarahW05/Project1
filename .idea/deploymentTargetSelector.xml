@@ -7,6 +7,11 @@
         <DialogSelection />
       </SelectionState>
       
+      <SelectionState runConfigName="UserPageTest">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
+    </SelectionState>
+      
       <SelectionState runConfigName="LoginScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
