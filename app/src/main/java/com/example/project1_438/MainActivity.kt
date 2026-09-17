@@ -1,5 +1,6 @@
 package com.example.project1_438
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,15 +31,31 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = "dashboard"
                 ){
-                    composable("dashboard"){
-                        DashboardScreen(onLoginClick = {
-                            navController.navigate("login")
-                        }, onUserClick = {
-                            if(loggedInUserId != null){
-                                navController.navigate("user")
-                            }else{
+                    composable("dashboard") {
+                        DashboardScreen(
+                            onLoginClick = {
                                 navController.navigate("login")
-                            }})
+                            },
+                            onUserClick = {
+                                if (loggedInUserId != null) {
+                                    navController.navigate("user")
+                                } else {
+                                    navController.navigate("login")
+                                }
+                            },
+                            onSearch = { word ->
+                                val intent =
+                                    Intent(
+                                        this@MainActivity,
+                                        DefinitionActivity::class.java
+                                    ).putExtra(
+                                        DefinitionActivity.EXTRA_WORD,
+                                        word
+                                    )
+
+                                startActivity(intent)
+                            }
+                        )
                     }
                     composable("login"){
                         //navigates to dashboard once user is successfully logged in
