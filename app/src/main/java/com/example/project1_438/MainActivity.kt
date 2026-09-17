@@ -4,6 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,6 +24,7 @@ class MainActivity : ComponentActivity() {
             Project1438Theme {
                 //the thing that controls the ability to move between the screens/views
                 val navController = rememberNavController()
+                var loggedInUserId by remember { mutableStateOf<Long?>(null) }
 
                 NavHost(
                     navController = navController,
@@ -28,11 +33,20 @@ class MainActivity : ComponentActivity() {
                     composable("dashboard"){
                         DashboardScreen(onLoginClick = {
                             navController.navigate("login")
-                        })
+                        }, onUserClick = {
+                            if(loggedInUserId != null){
+                                navController.navigate("user")
+                            }else{
+                                navController.navigate("login")
+                            }})
                     }
                     composable("login"){
                         //navigates to dashboard once user is successfully logged in
-                        LoginScreen(userDao = database.userDAO(), onLoginSuccess = {navController.navigate("dashboard")})
+                        LoginScreen(userDao = database.userDAO(), onLoginSuccess = {userId -> loggedInUserId = userId
+                            navController.navigate("dashboard")})
+                    }
+                    composable("user") {
+                        loggedInUserId?.let { userId -> UserPage(userId = userId, userDao = database.userDAO())}
                     }
                 }
 

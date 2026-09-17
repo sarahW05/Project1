@@ -48,7 +48,7 @@ internal fun fetchDefinition(
 }
 
 @Composable
-fun DashboardScreen( onLoginClick: () -> Unit) {
+fun DashboardScreen( onLoginClick: () -> Unit, onUserClick: () -> Unit) {
 
     val word = DASHBOARD_WORD
     var definition by remember { mutableStateOf("Loading...") }
@@ -70,7 +70,8 @@ fun DashboardScreen( onLoginClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             //button for user page
-            IconButton(onClick = {//input logic
+            IconButton(onClick = {
+                onUserClick()
              }) {
                 //person icon
                 Text("\uD83D\uDC64")
