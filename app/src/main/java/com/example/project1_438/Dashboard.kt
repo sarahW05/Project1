@@ -54,6 +54,7 @@ internal fun fetchDefinition(
 @Composable
 fun DashboardScreen(
     onLoginClick: () -> Unit,
+    onUserClick: () -> Unit,
     onSearch: (String) -> Unit,
 ) {
 
@@ -84,7 +85,8 @@ fun DashboardScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             //button for user page
-            IconButton(onClick = {//input logic
+            IconButton(onClick = {
+                onUserClick()
              }) {
                 //person icon
                 Text("\uD83D\uDC64")
