@@ -22,10 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.project1_438.database.SessionManager
 import com.example.project1_438.database.UserDao
 
 @Composable
-fun LoginScreen(userDao: UserDao, onLoginSuccess: () -> Unit) {
+fun LoginScreen(
+    userDao: UserDao,
+    sessionManager: SessionManager,
+    onLoginSuccess: () -> Unit,
+    onCreateAccount: () -> Unit
+) {
     //variables created to store user information. They start as empty but get updated as user types
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -87,6 +93,7 @@ fun LoginScreen(userDao: UserDao, onLoginSuccess: () -> Unit) {
                 val user = userDao.login(username, password)
                 if(user != null){
                     errorMessage = ""
+                    sessionManager.saveUserId(user.userId)
                     onLoginSuccess()
                 }
                 else{
@@ -101,6 +108,16 @@ fun LoginScreen(userDao: UserDao, onLoginSuccess: () -> Unit) {
         if(errorMessage.isNotEmpty()){
             Spacer(modifier = Modifier.height(10.dp))
             Text(errorMessage)
+        }
+
+        Spacer(
+            modifier = Modifier.height(25.dp)
+        )
+
+        // The button to create an account
+        Button(onClick = onCreateAccount,
+            modifier = Modifier.fillMaxWidth() ) {
+            Text("Create An Account")
         }
     }
 }

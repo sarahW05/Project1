@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
+import com.example.project1_438.database.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -48,7 +49,7 @@ internal fun fetchDefinition(
 }
 
 @Composable
-fun DashboardScreen( onLoginClick: () -> Unit) {
+fun DashboardScreen(loggedInUserId: Long?, onLoginClick: () -> Unit) {
 
     val word = DASHBOARD_WORD
     var definition by remember { mutableStateOf("Loading...") }

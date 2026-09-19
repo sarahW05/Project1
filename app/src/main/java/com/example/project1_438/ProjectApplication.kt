@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import com.example.project1_438.database.SessionManager
 
 // Had to use Mr. Gpt to figure out how to do this, god Kotlin documentation sucks
 class ProjectApplication : Application() {
@@ -22,12 +23,17 @@ class ProjectApplication : Application() {
         ).setDriver(AndroidSQLiteDriver()).build()
     }
 
+//    Also need to declare the session manager here
+    val sessionManager: SessionManager by lazy {
+        SessionManager(applicationContext)
+    }
+
 //    This is to create a couple test users when the application runs, if they don't exist
     override fun onCreate() {
 //        This has the normal startup code run before the rest of what we're doing in here
         super.onCreate()
 
-//    This makes it so the test user insertion happens in another thread, because we have to to call a Suspend Function
+//    This makes it so the test user insertion happens in another thread, because we have to in order to call a Suspended Function
     CoroutineScope(
         SupervisorJob() + Dispatchers.IO).launch {
 //            Add test users to the database, if they don't already exist

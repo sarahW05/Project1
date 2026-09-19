@@ -63,15 +63,24 @@ android {
 }
 
 dependencies {
+//    Data store dependencies for persistent login
+    // Preferences DataStore (SharedPreferences like APIs)
+    implementation("androidx.datastore:datastore-preferences:1.2.1")
+
+    // Alternatively - without an Android dependency.
+    //implementation("androidx.datastore:datastore-preferences-core:1.2.1")
+
     implementation(platform(libs.androidx.compose.bom))
     implementation("androidx.navigation:navigation-compose:2.10.0")
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.material)
     testImplementation(libs.junit)
