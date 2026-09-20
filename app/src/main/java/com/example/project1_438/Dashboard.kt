@@ -18,6 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import com.example.project1_438.database.User
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.ImeAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -49,10 +53,22 @@ internal fun fetchDefinition(
 }
 
 @Composable
-fun DashboardScreen(loggedInUserId: Long?, onLoginClick: () -> Unit) {
+fun DashboardScreen(
+    loggedInUserId: Long?,
+    onLoginClick: () -> Unit,
+    onUserClick: () -> Unit,
+    onSearch: (String) -> Unit,
+) {
 
     val word = DASHBOARD_WORD
     var definition by remember { mutableStateOf("Loading...") }
+    var searchWord by rememberSaveable { mutableStateOf("") }
+
+    fun openDefinitionPage() {
+        if (searchWord.isNotBlank()) {
+            onSearch(searchWord)
+        }
+    }
 
     LaunchedEffect(Unit) {
         definition = withContext(Dispatchers.IO) {
@@ -71,7 +87,8 @@ fun DashboardScreen(loggedInUserId: Long?, onLoginClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             //button for user page
-            IconButton(onClick = {//input logic
+            IconButton(onClick = {
+                onUserClick()
              }) {
                 //person icon
                 Text("\uD83D\uDC64")
@@ -99,14 +116,25 @@ fun DashboardScreen(loggedInUserId: Long?, onLoginClick: () -> Unit) {
 
         //search bar
         OutlinedTextField(
-            value = "",
-            onValueChange = {
-                //input logic
-            },
+            value = searchWord,
+            onValueChange = { searchWord = it },
             label = {
                 Text("Search up a word")
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = { openDefinitionPage() }
+            )
         )
+
+        Button(
+            onClick = { openDefinitionPage() },
+            enabled = searchWord.isNotBlank(),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Search")
+        }
     }
 }
