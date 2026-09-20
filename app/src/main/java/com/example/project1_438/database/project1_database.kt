@@ -8,10 +8,10 @@ import androidx.room3.RoomDatabase
 @Database(
     entities = [User::class, Favorite::class],
     version = 2,
-    autoMigrations =
-        [AutoMigration(
-        from = 1,
-        to = 2)]
+//    autoMigrations =
+//        [AutoMigration(
+//        from = 1,
+//        to = 2)]
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDAO() : UserDao

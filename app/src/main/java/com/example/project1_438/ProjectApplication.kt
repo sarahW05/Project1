@@ -20,7 +20,9 @@ class ProjectApplication : Application() {
         Room.databaseBuilder<AppDatabase>(
             applicationContext,
             "project1_database" //The persistent database filename
-        ).setDriver(AndroidSQLiteDriver()).build()
+        ).setDriver(AndroidSQLiteDriver())
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
 //    Also need to declare the session manager here
