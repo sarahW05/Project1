@@ -6,67 +6,107 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 import com.example.project1_438.ui.theme.Project1438Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //get db before setting content
+
+        // Gets the database before setting the Compose content.
         val database = (application as ProjectApplication).database
+
+        // Gets the session manager before setting the Compose content.
+        // The session manager provides access to the persisted logged-in user ID.
+        val sessionManager = (application as ProjectApplication).sessionManager
+
         setContent {
             Project1438Theme {
-                //the thing that controls the ability to move between the screens/views
+                // Controls the ability to move between the application's screens.
                 val navController = rememberNavController()
-                var loggedInUserId by remember { mutableStateOf<Long?>(null) }
+
+                // Safely reads the logged-in user's ID from DataStore.
+                // The value is null when no user is currently logged in.
+                val loggedInUser by sessionManager.userIdFlow()
+                    .collectAsStateWithLifecycle(initialValue = null)
 
                 NavHost(
                     navController = navController,
                     startDestination = "dashboard"
-                ){
+                ) {
                     composable("dashboard") {
                         DashboardScreen(
                             onLoginClick = {
                                 navController.navigate("login")
                             },
                             onUserClick = {
-                                if (loggedInUserId != null) {
+                                // Logged-in users can open their user page.
+                                // Logged-out users are sent to the login screen.
+                                if (loggedInUser != null) {
                                     navController.navigate("user")
                                 } else {
                                     navController.navigate("login")
                                 }
                             },
                             onSearch = { word ->
-                                val intent =
-                                    Intent(
-                                        this@MainActivity,
-                                        DefinitionActivity::class.java
-                                    ).putExtra(
-                                        DefinitionActivity.EXTRA_WORD,
-                                        word
-                                    )
+                                // Opens the definition activity with the searched word.
+                                val intent = Intent(
+                                    this@MainActivity,
+                                    DefinitionActivity::class.java
+                                ).putExtra(
+                                    DefinitionActivity.EXTRA_WORD,
+                                    word
+                                )
 
                                 startActivity(intent)
                             }
                         )
                     }
-                    composable("login"){
-                        //navigates to dashboard once user is successfully logged in
-                        LoginScreen(userDao = database.userDAO(), onLoginSuccess = {userId -> loggedInUserId = userId
-                            navController.navigate("dashboard")})
+
+                    composable("login") {
+                        // Navigates to the dashboard after a successful login.
+                        // LoginScreen also saves the user's ID through SessionManager.
+                        LoginScreen(
+                            userDao = database.userDAO(),
+                            sessionManager = sessionManager,
+                            onLoginSuccess = {
+                                navController.navigate("dashboard")
+                            },
+                            onCreateAccount = {
+                                // Allows users to reach account creation from
+                                // the login screen.
+                                navController.navigate("createAcc")
+                            }
+                        )
                     }
+
+                    composable("createAcc") {
+                        // Creates a new account and saves the new user's ID
+                        // through SessionManager before returning to the dashboard.
+                        CreateAccount(
+                            userDao = database.userDAO(),
+                            sessionManager = sessionManager,
+                            onAccCreated = {
+                                navController.navigate("dashboard")
+                            }
+                        )
+                    }
+
                     composable("user") {
-                        loggedInUserId?.let { userId -> UserPage(userId = userId, userDao = database.userDAO())}
+                        // Only displays the user page when a logged-in user ID
+                        // is available from the session manager.
+                        loggedInUser?.let { userId ->
+                            UserPage(
+                                userId = userId,
+                                userDao = database.userDAO()
+                            )
+                        }
                     }
                 }
-
             }
         }
     }

@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
+import com.example.project1_438.database.User
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -53,6 +54,7 @@ internal fun fetchDefinition(
 
 @Composable
 fun DashboardScreen(
+    loggedInUserId: Long?,
     onLoginClick: () -> Unit,
     onUserClick: () -> Unit,
     onSearch: (String) -> Unit,

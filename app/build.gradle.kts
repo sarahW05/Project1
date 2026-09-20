@@ -2,6 +2,8 @@
 import net.ltgt.gradle.errorprone.errorprone
 //Apparently this will allow us to force pmd to run, in a custom gradle task anyway
 import org.gradle.api.plugins.quality.Pmd
+//Detekt requires this import for the custom task
+import dev.detekt.gradle.Detekt
 
 plugins {
     alias(libs.plugins.android.application)
@@ -14,6 +16,12 @@ plugins {
 
     id("net.ltgt.errorprone")
     id("com.github.spotbugs")
+
+//    Detekt
+    id("dev.detekt")
+
+//    Enable schema exporting so the database can migrate versions
+    id("androidx.room3")
 }
 
 //The necessary enabler for Errorprone to run on gradle
@@ -22,6 +30,18 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 
+room3 {
+    schemaDirectory("$projectDir/schemas")
+}
+
+
+detekt{
+    toolVersion = "2.0.0-alpha.6"
+    config.setFrom(rootProject.file("config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
+//This just doesn't matter at this point,but I'm leaving it here since it took forever to get working
 pmd {
     isConsoleOutput = true
     toolVersion = "7.26.0"
@@ -63,15 +83,24 @@ android {
 }
 
 dependencies {
+//    Data store dependencies for persistent login
+    // Preferences DataStore (SharedPreferences like APIs)
+    implementation("androidx.datastore:datastore-preferences:1.2.1")
+
+    // Alternatively - without an Android dependency.
+    //implementation("androidx.datastore:datastore-preferences-core:1.2.1")
+
     implementation(platform(libs.androidx.compose.bom))
     implementation("androidx.navigation:navigation-compose:2.10.0")
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.material)
     testImplementation(libs.junit)
@@ -97,6 +126,15 @@ dependencies {
     pmd("net.sourceforge.pmd:pmd-kotlin:7.26.0")
 
 }
+
+//Detekt also needs a task definition in order to run directly
+// Kotlin DSL
+tasks.withType<Detekt>().configureEach {
+    reports {
+        checkstyle.required.set(true)
+    }
+}
+
 
 //Supplied by Mr. Gippity, because my bran is tired from trying to get this to work for 6 hours while the robot kept running me in circles
 //I gotta just start reading documentation myself instead of asking the hallucination machines for help explaining things
