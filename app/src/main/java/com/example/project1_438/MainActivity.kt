@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable("dashboard") {
                         DashboardScreen(
+                            loggedInUserId = loggedInUser,
                             onLoginClick = {
                                 navController.navigate("login")
                             },
