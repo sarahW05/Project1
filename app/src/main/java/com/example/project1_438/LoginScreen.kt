@@ -94,7 +94,7 @@ fun LoginScreen(
                 if(user != null){
                     errorMessage = ""
                     sessionManager.saveUserId(user.userId)
-                    onLoginSuccess(user.userId)
+                    onLoginSuccess()
                 }
                 else{
                     errorMessage = "Incorrect username or password"
