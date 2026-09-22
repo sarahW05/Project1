@@ -34,7 +34,7 @@ class DefinitionActivity : ComponentActivity() {
         lifecycleScope.launch {
             runCatching {
                 withContext(Dispatchers.IO) {
-                    DictionaryApi.lookUp(word)
+                    DictionaryRepository.lookUp(word)
                 }
             }.onSuccess { entry ->
                 phoneticText.text = entry.phonetics.joinToString("  ")
@@ -102,11 +102,6 @@ class DefinitionActivity : ComponentActivity() {
 
         if (entry.sourceUrls.isNotEmpty()) {
             result.append("SOURCES\n${entry.sourceUrls.joinToString("\n")}\n\n")
-        }
-
-        entry.license?.let { license ->
-            result.append("LICENSE\n${license.name}")
-            license.url?.let { result.append("\n$it") }
         }
 
         while (result.isNotEmpty() && result.last().isWhitespace()) {

@@ -28,10 +28,6 @@ class DashboardApiTest {
                     "antonyms": []
                   }
                 ],
-                "license": {
-                  "name": "Example license",
-                  "url": "https://example.com/license"
-                },
                 "sourceUrls": ["https://example.com/hello"]
               }
             ]
@@ -51,7 +47,5 @@ class DashboardApiTest {
         assertEquals(listOf("hi"), definition.synonyms)
         assertEquals(listOf("goodbye"), definition.antonyms)
         assertEquals(listOf("https://example.com/hello"), entry.sourceUrls)
-        assertEquals("Example license", entry.license?.name)
-        assertEquals("https://example.com/license", entry.license?.url)
     }
 }

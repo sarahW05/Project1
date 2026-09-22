@@ -30,7 +30,7 @@ internal const val DEFINITION_UNAVAILABLE = "Definition unavailable"
 
 internal fun fetchDefinition(word: String): String {
     return try {
-        DictionaryApi.lookUp(word).firstDefinition() ?: DEFINITION_UNAVAILABLE
+        DictionaryRepository.lookUp(word).firstDefinition() ?: DEFINITION_UNAVAILABLE
     } catch (e: Exception) {
         DEFINITION_UNAVAILABLE
     }
