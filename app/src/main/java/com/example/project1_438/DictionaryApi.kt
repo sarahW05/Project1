@@ -14,7 +14,6 @@ internal data class DictionaryEntry(
     val meanings: List<DictionaryMeaning>,
     val origin: String?,
     val sourceUrls: List<String>,
-    val license: DictionaryLicense?,
 ) {
     fun firstDefinition(): String? =
         meanings.firstNotNullOfOrNull { meaning ->
@@ -34,11 +33,6 @@ internal data class DictionaryDefinition(
     val example: String?,
     val synonyms: List<String>,
     val antonyms: List<String>,
-)
-
-internal data class DictionaryLicense(
-    val name: String,
-    val url: String?,
 )
 
 internal object DictionaryApi {
@@ -104,14 +98,6 @@ internal object DictionaryApi {
             meanings = meanings,
             origin = entry.optionalString("origin"),
             sourceUrls = entry.stringList("sourceUrls"),
-            license = entry.optJSONObject("license")?.let { licenseJson ->
-                licenseJson.optionalString("name")?.let { name ->
-                    DictionaryLicense(
-                        name = name,
-                        url = licenseJson.optionalString("url"),
-                    )
-                }
-            },
         )
     }
 
