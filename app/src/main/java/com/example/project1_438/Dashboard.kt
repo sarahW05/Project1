@@ -24,29 +24,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import java.net.URL
 
 internal const val DASHBOARD_WORD = "hello"
 internal const val DEFINITION_UNAVAILABLE = "Definition unavailable"
 
-private const val DICTIONARY_API_BASE_URL =
-    "https://api.dictionaryapi.dev/api/v2/entries/en"
-
-internal fun fetchDefinition(
-    word: String,
-    responseLoader: (String) -> String = { url -> URL(url).readText() }
-): String {
+internal fun fetchDefinition(word: String): String {
     return try {
-        val response = responseLoader("$DICTIONARY_API_BASE_URL/$word")
-
-        JSONArray(response)
-            .getJSONObject(0)
-            .getJSONArray("meanings")
-            .getJSONObject(0)
-            .getJSONArray("definitions")
-            .getJSONObject(0)
-            .getString("definition")
+        DictionaryRepository.lookUp(word).firstDefinition() ?: DEFINITION_UNAVAILABLE
     } catch (e: Exception) {
         DEFINITION_UNAVAILABLE
     }

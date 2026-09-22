@@ -81,6 +81,12 @@ class MainActivity : ComponentActivity() {
                                 // Allows users to reach account creation from
                                 // the login screen.
                                 navController.navigate("createAcc")
+                            },
+                            onHomeClick = {
+                                navController.navigate("dashboard") {
+                                    popUpTo("dashboard")
+                                    launchSingleTop = true
+                                }
                             }
                         )
                     }

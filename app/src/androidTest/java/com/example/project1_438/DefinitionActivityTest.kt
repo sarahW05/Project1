@@ -8,7 +8,10 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.lifecycle.Lifecycle
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -33,6 +36,14 @@ class DefinitionActivityTest {
     @Test
     fun capitalizedWordTest() {
         assertWordIsDisplayed("Hello")
+    }
+
+    @Test
+    fun homeButton_closesDefinitionPage() {
+        launchDefinitionPage("apple").use { scenario ->
+            onView(withId(R.id.homeButton)).perform(click())
+            assertEquals(Lifecycle.State.DESTROYED, scenario.state)
+        }
     }
 
     private fun assertWordIsDisplayed(word: String) {
