@@ -109,7 +109,13 @@ class MainActivity : ComponentActivity() {
                         loggedInUser?.let { userId ->
                             UserPage(
                                 userId = userId,
-                                userDao = database.userDAO()
+                                userDao = database.userDAO(),
+                                onHomeClick = {
+                                    navController.navigate("dashboard") {
+                                        popUpTo("dashboard")
+                                        launchSingleTop = true
+                                    }
+                                }
                             )
                         }
                     }
