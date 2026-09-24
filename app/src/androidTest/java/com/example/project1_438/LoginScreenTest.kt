@@ -12,6 +12,7 @@ import androidx.room3.Room
 import androidx.sqlite.driver.AndroidSQLiteDriver
 import androidx.test.core.app.ApplicationProvider
 import com.example.project1_438.database.AppDatabase
+import com.example.project1_438.database.SessionManager
 import com.example.project1_438.database.User
 import com.example.project1_438.database.UserDao
 import kotlinx.coroutines.test.runTest
@@ -28,6 +29,7 @@ class LoginScreenTest {
 
     private lateinit var database: AppDatabase
     private lateinit var userDao: UserDao
+    private lateinit var sessionManager: SessionManager
 
     // Creates a temporary database before each test
     @Before
@@ -41,6 +43,7 @@ class LoginScreenTest {
                 .build()
 
         userDao = database.userDAO()
+        sessionManager = SessionManager(context)
     }
 
     // Closes the temporary database after each test
@@ -60,6 +63,8 @@ class LoginScreenTest {
         composeTestRule.setContent {
             LoginScreen(
                 userDao = userDao,
+                sessionManager = sessionManager,
+                onCreateAccount = {},
                 onLoginSuccess = {}
             )
         }
@@ -94,6 +99,8 @@ class LoginScreenTest {
         composeTestRule.setContent {
             LoginScreen(
                 userDao = userDao,
+                sessionManager = sessionManager,
+                onCreateAccount = {},
                 onLoginSuccess = {}
             )
         }
@@ -126,6 +133,8 @@ class LoginScreenTest {
         composeTestRule.setContent {
             LoginScreen(
                 userDao = userDao,
+                sessionManager = sessionManager,
+                onCreateAccount = {},
                 onLoginSuccess = {}
             )
         }
@@ -171,6 +180,8 @@ class LoginScreenTest {
         composeTestRule.setContent {
             LoginScreen(
                 userDao = userDao,
+                sessionManager = sessionManager,
+                onCreateAccount = {},
                 onLoginSuccess = {
                     loginSuccessful = true
                 }

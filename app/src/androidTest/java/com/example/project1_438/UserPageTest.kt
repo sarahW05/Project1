@@ -53,7 +53,7 @@ class UserPageTest {
         )
 
         // Insert user and save their ID
-        userId = userDao.insertUser(testUser)
+        userId = checkNotNull(userDao.insertUser(testUser))
     }
 
 

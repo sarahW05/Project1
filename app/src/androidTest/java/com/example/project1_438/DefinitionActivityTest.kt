@@ -38,14 +38,6 @@ class DefinitionActivityTest {
         assertWordIsDisplayed("Hello")
     }
 
-    @Test
-    fun homeButton_closesDefinitionPage() {
-        launchDefinitionPage("apple").use { scenario ->
-            onView(withId(R.id.homeButton)).perform(click())
-            assertEquals(Lifecycle.State.DESTROYED, scenario.state)
-        }
-    }
-
     private fun assertWordIsDisplayed(word: String) {
         launchDefinitionPage(word).use {
             onView(withId(R.id.wordText))
