@@ -1,6 +1,7 @@
 package com.example.project1_438
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,13 +22,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.project1_438.database.User
 import com.example.project1_438.database.UserDao
 import kotlinx.coroutines.launch
 
 @Composable
-fun UserPage(userId: Long, userDao: UserDao){
+fun UserPage(
+    userId: Long,
+    userDao: UserDao,
+    onHomeClick: () -> Unit = {},
+){
 
     var user by remember { mutableStateOf<User?>(null) }
 
@@ -54,11 +61,30 @@ fun UserPage(userId: Long, userDao: UserDao){
             password = currentUser.password
         }
     }
-    Column(
-        modifier = Modifier.fillMaxSize().padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding()
+            .padding(horizontal = 24.dp)
+            .padding(top = 16.dp, bottom = 32.dp)
     ) {
+        Button(
+            onClick = onHomeClick,
+            modifier = Modifier.align(Alignment.TopStart)
+        ) {
+            Text(
+                text = "Home",
+                color = Color.White
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
         Spacer(modifier = Modifier.height(30.dp))
         //not editing
     if(!isEditing) {
@@ -159,5 +185,5 @@ fun UserPage(userId: Long, userDao: UserDao){
         }
     }
     }
+    }
 }
-
