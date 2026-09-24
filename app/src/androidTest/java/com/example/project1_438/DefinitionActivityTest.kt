@@ -1,22 +1,16 @@
 package com.example.project1_438
 
-import android.content.Context
-import android.content.Intent
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.lifecycle.Lifecycle
-import org.junit.Assert.assertEquals
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import org.junit.Assert.assertTrue
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
 class DefinitionActivityTest {
+
+    @get:Rule
+    val composeTestRule = createComposeRule()
 
     @Test
     fun enteredWordTest() {
@@ -38,19 +32,50 @@ class DefinitionActivityTest {
         assertWordIsDisplayed("Hello")
     }
 
+    @Test
+    fun homeButton_callsHomeAction() {
+        var homeClicked = false
+
+        showDefinition(
+            word = "apple",
+            onHomeClick = { homeClicked = true },
+        )
+
+        composeTestRule
+            .onNodeWithText("Home")
+            .performClick()
+
+        assertTrue(homeClicked)
+    }
+
     private fun assertWordIsDisplayed(word: String) {
-        launchDefinitionPage(word).use {
-            onView(withId(R.id.wordText))
-                .check(matches(withText(word)))
+        showDefinition(word)
+
+        composeTestRule
+            .onNodeWithText(word)
+            .assertExists()
+    }
+
+    private fun showDefinition(
+        word: String,
+        onHomeClick: () -> Unit = {},
+    ) {
+        composeTestRule.setContent {
+            DefinitionScreen(
+                word = word,
+                onHomeClick = onHomeClick,
+                entryLoader = { EMPTY_ENTRY },
+            )
         }
     }
 
-    private fun launchDefinitionPage(word: String): ActivityScenario<DefinitionActivity> {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        val intent = Intent(context, DefinitionActivity::class.java).apply {
-            putExtra(DefinitionActivity.EXTRA_WORD, word)
-        }
-
-        return ActivityScenario.launch(intent)
+    private companion object {
+        val EMPTY_ENTRY = DictionaryEntry(
+            word = "",
+            phonetics = emptyList(),
+            meanings = emptyList(),
+            origin = null,
+            sourceUrls = emptyList(),
+        )
     }
 }
